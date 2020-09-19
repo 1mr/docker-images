@@ -8,20 +8,19 @@ on:
 
 jobs:
 
-  build-buster:
+  build-debian-images:
 
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        debian-version: ['buster', 'stretch']
 
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file docker-base-images/debian/buster/Dockerfile --tag debian:buster
-
-  build-stretch:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file docker-base-images/debian/stretch/Dockerfile --tag debian:stretch
+      run: docker build . -f docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile -t debian:${{ matrix.debian-version }}
+    - name: Upload image to GH registry
+      run: |
+      docker login -u publisher -p ${GH_TOKEN} docker.pkg.github.com
+      docker push debian:${{ matrix.debian-version }}
