@@ -15,10 +15,19 @@ jobs:
         debian-version: ['buster', 'stretch']
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build -f docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile -t debian:${{ matrix.debian-version }} .
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v1 
+      with:
+        username: ${{ secrets.GH_USER }}
+        password: ${{ secrets.GH_TOKEN }}
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile
+        push: true
+        tags: debian:${{ matrix.debian-version }}
     - name: Upload image to GH registry
-      run: |
-        echo ${GH_TOKEN} | docker login -u ${GH_USER} ghcr.io --password-stdin
-        docker push debian:${{ matrix.debian-version }}
+      run: docker push debian:${{ matrix.debian-version }}
