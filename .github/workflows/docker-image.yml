@@ -31,6 +31,6 @@ jobs:
         context: .
         file: ./docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile
         push: true
-        tags: debian:${{ matrix.debian-version }}
+        tags: docker.pkg.github.com/1mr/docker-images/debian:${{ matrix.debian-version }}
     - name: Upload image to GH registry
-      run: docker push debian:${{ matrix.debian-version }}
+      run: docker push docker.pkg.github.com/1mr/docker-images/debian:${{ matrix.debian-version }}
