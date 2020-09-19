@@ -1,5 +1,7 @@
 FROM debian:buster-slim
 
+LABEL org.opencontainers.image.source https://github.com/1mr/docker-iamges
+
 ENV container docker
 ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
