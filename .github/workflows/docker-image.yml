@@ -3,9 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-
+  
 jobs:
 
   build-debian-images:
@@ -19,8 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . -f docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile -t debian:${{ matrix.debian-version }}
+      run: docker build -f docker-base-images/debian/${{ matrix.debian-version }}/Dockerfile -t debian:${{ matrix.debian-version }}
     - name: Upload image to GH registry
       run: |
-      docker login -u publisher -p ${GH_TOKEN} docker.pkg.github.com
-      docker push debian:${{ matrix.debian-version }}
+        docker login -u publisher -p ${GH_TOKEN} docker.pkg.github.com
+        docker push debian:${{ matrix.debian-version }}
