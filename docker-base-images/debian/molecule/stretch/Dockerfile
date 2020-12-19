@@ -9,7 +9,6 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list
 
 RUN apt-get update \
-    && apt-get upgrade -y \
     && apt-get install -y systemd systemd-sysv ca-certificates \
     && apt-get install -y python3-minimal python3-zipstream \
     && apt-get install -y iproute2 netcat \
