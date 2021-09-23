@@ -26,7 +26,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ./docker-base-images/debian/molecule/${{ matrix.debian-version }}/
         file: ./docker-base-images/debian/molecule/${{ matrix.debian-version }}/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/debian:molecule-${{ matrix.debian-version }}
@@ -47,7 +47,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ./pgbouncer/
         file: ./pgbouncer/Dockerfile
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/pgbouncer:1.16.0
