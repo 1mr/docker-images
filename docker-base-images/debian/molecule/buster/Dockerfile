@@ -5,16 +5,17 @@ LABEL maintainer="Stas Stavnichuk"
 ENV container docker
 ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
+ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo
 
-RUN echo 'deb http://deb.debian.org/debian buster-backports main' >> /etc/apt/sources.list
-
-RUN apt-get update \
-    && apt-get install -y systemd systemd-sysv ca-certificates \
-    && apt-get install -y python3-minimal python3-zipstream \
-    && apt-get install -y iproute2 netcat \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
+RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/sources.list
+# hadolint ignore=DL3008
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends systemd systemd-cron python3-minimal python3-zipstream sudo bash ca-certificates iproute2 netcat && \
+    rm -Rf /usr/share/doc && \
+    rm -Rf /usr/share/man && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# hadolint ignore=DL3059
 RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
     /etc/systemd/system/*.wants/* \
     /lib/systemd/system/local-fs.target.wants/* \
@@ -23,5 +24,16 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
     /lib/systemd/system/sysinit.target.wants/systemd-tmpfiles-setup* \
     /lib/systemd/system/systemd-update-utmp*
 
-VOLUME [ "/sys/fs/cgroup" ]
-CMD ["/lib/systemd/systemd"]
+# Disable requiretty.
+RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
+
+# Create `ansible` user with sudo permissions
+RUN set -xe && \
+    groupadd -r ${ANSIBLE_USER} && \
+    useradd -m -g ${ANSIBLE_USER} ${ANSIBLE_USER} && \
+    usermod -aG ${SUDO_GROUP} ${ANSIBLE_USER} && \
+    sed -i "/^%${SUDO_GROUP}/s/ALL\$/NOPASSWD:ALL/g" /etc/sudoers
+
+VOLUME [ "/sys/fs/cgroup", "/tmp", "/run" ]
+
+CMD [ "/lib/systemd/systemd" ]
