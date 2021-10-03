@@ -39,6 +39,8 @@ RUN set -xe && \
     usermod -aG ${SUDO_GROUP} ${ANSIBLE_USER} && \
     sed -i "/^%${SUDO_GROUP}/s/ALL\$/NOPASSWD:ALL/g" /etc/sudoers
 
+RUN pip3 install ansible cryptography
+
 VOLUME [ "/sys/fs/cgroup", "/tmp", "/run" ]
 
 CMD [ "/lib/systemd/systemd" ]
