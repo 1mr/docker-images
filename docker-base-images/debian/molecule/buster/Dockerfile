@@ -11,6 +11,8 @@ RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/
 # hadolint ignore=DL3008
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends systemd systemd-cron python3-minimal python3-pip python3-zipstream sudo bash ca-certificates iproute2 netcat && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3 10 && \
+    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10 && \
     rm -Rf /usr/share/doc && \
     rm -Rf /usr/share/man && \
     apt-get clean && \
