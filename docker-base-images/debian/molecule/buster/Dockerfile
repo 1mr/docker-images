@@ -7,16 +7,19 @@ ENV LC_ALL C
 ENV DEBIAN_FRONTEND noninteractive
 ENV ANSIBLE_USER=ansible SUDO_GROUP=sudo
 
-RUN echo 'deb http://deb.debian.org/debian bullseye-backports main' >> /etc/apt/sources.list
+RUN echo 'deb http://deb.debian.org/debian buster-backports main' >> /etc/apt/sources.list
 # hadolint ignore=DL3008
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends systemd systemd-cron python3-minimal python3-pip python3-zipstream sudo bash ca-certificates iproute2 netcat && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3 10 && \
-    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10 && \
-    rm -Rf /usr/share/doc && \
-    rm -Rf /usr/share/man && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       sudo systemd systemd-sysv \
+       build-essential wget libffi-dev libssl-dev \
+       python3-pip python3-dev python3-setuptools python3-wheel python3-apt \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
+    && update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 10 \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
+    && apt-get clean
+
 # hadolint ignore=DL3059
 RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
     /etc/systemd/system/*.wants/* \
