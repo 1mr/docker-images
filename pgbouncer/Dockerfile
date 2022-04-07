@@ -8,7 +8,7 @@ RUN \
   apk add -U --no-cache --upgrade busybox && \
   # Download
   apk add -U --no-cache autoconf autoconf-doc automake udns udns-dev curl gcc libc-dev libevent libevent-dev libtool make openssl-dev pkgconfig postgresql-client && \
-  curl -o  /tmp/pgbouncer-$VERSION.tar.gz -L https://github.com/pgbouncer/pgbouncer/releases/download/pgbouncer_${VERSION//./_}/pgbouncer-$VERSION.tar.gz && \
+  curl -o  /tmp/pgbouncer-$VERSION.tar.gz -L "https://github.com/pgbouncer/pgbouncer/releases/download/pgbouncer_${VERSION//./_}/pgbouncer-$VERSION.tar.gz" && \
   cd /tmp && \
   # Unpack, compile
   tar xvfz /tmp/pgbouncer-$VERSION.tar.gz && \
