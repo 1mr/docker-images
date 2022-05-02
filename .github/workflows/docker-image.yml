@@ -36,7 +36,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Login to DockerHub
@@ -50,4 +50,4 @@ jobs:
         context: ./pgbouncer/
         file: ./pgbouncer/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pgbouncer:1.16.0
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/pgbouncer:1.17.0
