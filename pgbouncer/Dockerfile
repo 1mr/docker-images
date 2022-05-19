@@ -1,36 +1,32 @@
-FROM alpine:3.15
-ARG VERSION=1.17.0
+FROM alpine:3.15 as base
+ARG PGBOUNCER_VERSION=1.17.0
+# hadolint ignore=DL3018
+RUN apk add -U --no-cache --upgrade busybox ca-certificates postgresql-client libevent c-ares
 
-# Inspiration from https://github.com/gmr/alpine-pgbouncer/blob/master/Dockerfile
-# hadolint ignore=DL3003,DL3018
+
+FROM base as builder
+# hadolint ignore=SC2086,DL3003,DL3018
 RUN \
-  # security
-  apk add -U --no-cache --upgrade busybox && \
-  # Download
-  apk add -U --no-cache autoconf autoconf-doc automake udns udns-dev curl gcc libc-dev libevent libevent-dev libtool make openssl-dev pkgconfig postgresql-client && \
-  curl -o  /tmp/pgbouncer-$VERSION.tar.gz -L "https://github.com/pgbouncer/pgbouncer/releases/download/pgbouncer_${VERSION//./_}/pgbouncer-$VERSION.tar.gz" && \
-  cd /tmp && \
-  # Unpack, compile
-  tar xvfz /tmp/pgbouncer-$VERSION.tar.gz && \
-  cd pgbouncer-$VERSION && \
-  ./configure --prefix=/usr --with-udns && \
-  make && \
-  # Manual install
-  cp pgbouncer /usr/bin && \
-  mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer && \
-  # entrypoint installs the configuration, allow to write as postgres user
-  cp etc/pgbouncer.ini /etc/pgbouncer/pgbouncer.ini.example && \
-  cp etc/userlist.txt /etc/pgbouncer/userlist.txt.example && \
-  touch /etc/pgbouncer/userlist.txt && \
-  addgroup -g 70 -S postgres 2>/dev/null && \
-  adduser -u 70 -S -D -H -h /var/lib/postgresql -g "Postgres user" -s /bin/sh -G postgres postgres 2>/dev/null && \
-  chown -R postgres /var/run/pgbouncer /etc/pgbouncer && \
-  # Cleanup
-  cd /tmp && \
-  rm -rf /tmp/pgbouncer*  && \
-  apk del --purge autoconf autoconf-doc automake udns-dev curl gcc libc-dev libevent-dev libtool make libressl-dev pkgconfig
+  apk add -U --no-cache autoconf automake curl gcc libc-dev libevent-dev libtool make openssl-dev pkgconfig c-ares-dev && \
+  curl -o  /tmp/pgbouncer-$PGBOUNCER_VERSION.tar.gz -L "https://github.com/pgbouncer/pgbouncer/releases/download/pgbouncer_${PGBOUNCER_VERSION//./_}/pgbouncer-$PGBOUNCER_VERSION.tar.gz" && \
+  tar xvfz /tmp/pgbouncer-$PGBOUNCER_VERSION.tar.gz -C /tmp && \
+  cd /tmp/pgbouncer-$PGBOUNCER_VERSION && \
+  ./configure --prefix=/usr && \
+  make
 
+
+FROM base as prod
+
+RUN \
+  mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer && \
+  touch /etc/pgbouncer/userlist.txt && \
+  chown -R postgres /var/run/pgbouncer /etc/pgbouncer
+
+COPY --from=builder /tmp/pgbouncer-$PGBOUNCER_VERSION/pgbouncer /usr/bin
+COPY --from=builder /tmp/pgbouncer-$PGBOUNCER_VERSION/etc/pgbouncer.ini /etc/pgbouncer/pgbouncer.ini.example
+COPY --from=builder /tmp/pgbouncer-$PGBOUNCER_VERSION/etc/userlist.txt /etc/pgbouncer/userlist.txt.example
 COPY entrypoint.sh /entrypoint.sh
+
 USER postgres
 EXPOSE 5432
 ENTRYPOINT ["/entrypoint.sh"]
