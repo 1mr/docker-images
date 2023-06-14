@@ -1,5 +1,5 @@
-FROM alpine:3.15 as base
-ARG PGBOUNCER_VERSION=1.17.0
+FROM alpine:3.18 as base
+ARG PGBOUNCER_VERSION=1.19.1
 # hadolint ignore=DL3018
 RUN apk add -U --no-cache --upgrade busybox ca-certificates postgresql-client libevent c-ares
 
@@ -29,5 +29,5 @@ COPY entrypoint.sh /entrypoint.sh
 
 USER postgres
 EXPOSE 5432
-ENTRYPOINT ["/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/bin/pgbouncer", "/etc/pgbouncer/pgbouncer.ini"]
