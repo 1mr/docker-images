@@ -1,5 +1,5 @@
 FROM alpine:3.18 as base
-ARG PGBOUNCER_VERSION=1.19.1
+ARG PGBOUNCER_VERSION=1.21.0
 # hadolint ignore=DL3018
 RUN apk add -U --no-cache --upgrade busybox ca-certificates postgresql-client libevent c-ares
 
