@@ -67,13 +67,13 @@ if [ ! -f ${PG_CONFIG_DIR}/pgbouncer.ini ]; then
 ################## Auto generated ##################
 [databases]
 ${DB_NAME:-*} = host=${DB_HOST:?"Setup pgbouncer config error! You must set DB_HOST env"} \
-port=${DB_PORT:-5432} user=${DB_USER:-postgres}
+port=${DB_PORT:-5432} auth_user=${DB_USER:-postgres}
 ${CLIENT_ENCODING:+client_encoding = ${CLIENT_ENCODING}\n}\
 
 [pgbouncer]
 listen_addr = ${LISTEN_ADDR:-0.0.0.0}
 listen_port = ${LISTEN_PORT:-5432}
-unix_socket_dir =
+unix_socket_dir = ${UNIX_SOCKET_DIR}
 user = postgres
 auth_file = ${AUTH_FILE:-$PG_CONFIG_DIR/userlist.txt}
 ${AUTH_HBA_FILE:+auth_hba_file = ${AUTH_HBA_FILE}\n}\
@@ -82,6 +82,7 @@ ${AUTH_USER:+auth_user = ${AUTH_USER}\n}\
 ${AUTH_QUERY:+auth_query = ${AUTH_QUERY}\n}\
 ${POOL_MODE:+pool_mode = ${POOL_MODE}\n}\
 ${MAX_CLIENT_CONN:+max_client_conn = ${MAX_CLIENT_CONN}\n}\
+${POOL_SIZE:+pool_size = ${POOL_SIZE}\n}\
 ${DEFAULT_POOL_SIZE:+default_pool_size = ${DEFAULT_POOL_SIZE}\n}\
 ${MIN_POOL_SIZE:+min_pool_size = ${MIN_POOL_SIZE}\n}\
 ${RESERVE_POOL_SIZE:+reserve_pool_size = ${RESERVE_POOL_SIZE}\n}\
@@ -92,6 +93,8 @@ ${SERVER_ROUND_ROBIN:+server_round_robin = ${SERVER_ROUND_ROBIN}\n}\
 ignore_startup_parameters = ${IGNORE_STARTUP_PARAMETERS:-extra_float_digits}
 ${DISABLE_PQEXEC:+disable_pqexec = ${DISABLE_PQEXEC}\n}\
 ${APPLICATION_NAME_ADD_HOST:+application_name_add_host = ${APPLICATION_NAME_ADD_HOST}\n}\
+${TIMEZONE:+timezone = ${TIMEZONE}\n}\
+${MAX_PREPARED_STATEMENTS:+max_prepared_statements = ${MAX_PREPARED_STATEMENTS}\n}\
 
 # Log settings
 ${LOG_CONNECTIONS:+log_connections = ${LOG_CONNECTIONS}\n}\
