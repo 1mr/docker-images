@@ -8,7 +8,7 @@ FROM base as builder
 # hadolint ignore=SC2086,DL3003,DL3018
 RUN \
   apk add -U --no-cache autoconf automake curl gcc libc-dev libevent-dev libtool make openssl-dev pkgconfig c-ares-dev && \
-  curl -o  /tmp/pgbouncer-$PGBOUNCER_VERSION.tar.gz -L "https://github.com/pgbouncer/pgbouncer/releases/download/pgbouncer_${PGBOUNCER_VERSION//./_}/pgbouncer-$PGBOUNCER_VERSION.tar.gz" && \
+  curl -o  /tmp/pgbouncer-$PGBOUNCER_VERSION.tar.gz -L "https://pgbouncer.github.io/downloads/files/$PGBOUNCER_VERSION/pgbouncer-$PGBOUNCER_VERSION.tar.gz" && \
   tar xvfz /tmp/pgbouncer-$PGBOUNCER_VERSION.tar.gz -C /tmp && \
   cd /tmp/pgbouncer-$PGBOUNCER_VERSION && \
   ./configure --prefix=/usr && \
