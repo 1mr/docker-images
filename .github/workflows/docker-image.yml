@@ -52,4 +52,4 @@ jobs:
           context: ./pgbouncer/
           file: ./pgbouncer/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pgbouncer:1.23.1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pgbouncer:1.24.0
