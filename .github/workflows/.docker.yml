@@ -39,5 +39,5 @@ jobs:
           push: true
           provenance: false
           tags: |
-            ${{ inputs.name }}:${{ inputs.tag }}
-            ${{ inputs.name }}:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.name }}:${{ inputs.tag }}
+            ${{ vars.DOCKERHUB_USERNAME }}/${{ inputs.name }}:latest
