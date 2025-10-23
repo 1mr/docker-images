@@ -13,6 +13,6 @@ jobs:
   image:
     uses: ./.github/workflows/.docker.yml
     with:
-      name: superset
       context: superset
+      name: superset
       tag: 5.0.0

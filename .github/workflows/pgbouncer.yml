@@ -13,6 +13,6 @@ jobs:
   image:
     uses: ./.github/workflows/.docker.yml
     with:
-      name: pgbouncer
       context: pgbouncer
+      name: pgbouncer
       tag: 1.24.1
