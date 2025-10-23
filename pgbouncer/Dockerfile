@@ -4,7 +4,7 @@ ARG PGBOUNCER_VERSION=1.24.1
 RUN apk add -U --no-cache --upgrade busybox ca-certificates postgresql-client libevent c-ares
 
 
-FROM base as builder
+FROM base AS builder
 # hadolint ignore=SC2086,DL3003,DL3018
 RUN \
   apk add -U --no-cache autoconf automake curl gcc libc-dev libevent-dev libtool make openssl-dev pkgconfig c-ares-dev && \
@@ -15,7 +15,7 @@ RUN \
   make
 
 
-FROM base as prod
+FROM base AS prod
 
 RUN \
   mkdir -p /etc/pgbouncer /var/log/pgbouncer /var/run/pgbouncer && \

@@ -1,5 +1,5 @@
 IMAGE_NAME=1am3r/pgbouncer
-IMAGE_VERSION=1.24.0
+IMAGE_VERSION=1.24.1
 
 docker:
 	docker build --pull -t $(IMAGE_NAME):$(IMAGE_VERSION) .
