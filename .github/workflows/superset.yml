@@ -15,4 +15,4 @@ jobs:
     with:
       name: superset
       context: superset
-      tag: 5.0.0
+      tag: 6.1.0rc1
